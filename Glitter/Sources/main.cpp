@@ -64,48 +64,7 @@ int main(int argc, char * argv[]) {
     int width, height;
     glfwGetFramebufferSize(window, &width, &height);
     glViewport(0, 0, width, height);
-    
-//    GLint success;
-//    GLchar infoLog[512];
-//
-//    //=========================================================
-//    // Init shader stuff
-//    //=========================================================
-//
-//    GLuint vertexShader = glCreateShader(GL_VERTEX_SHADER);
-//    glShaderSource(vertexShader, 1, &vertexShaderSource, NULL);
-//    glCompileShader(vertexShader);
-//    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-//    if(!success) {
-//        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-//        fprintf (stderr, "ERROR::SHADER::VERTEX::COMPILATION_FAILED %s\n", infoLog);
-//        return EXIT_FAILURE;
-//    }
-//
-//    GLuint fragmentShader = glCreateShader(GL_FRAGMENT_SHADER);
-//    glShaderSource(fragmentShader, 1, &fragmentShaderSource, NULL);
-//    glCompileShader(fragmentShader);
-//    glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
-//    if(!success) {
-//        glGetShaderInfoLog(vertexShader, 512, NULL, infoLog);
-//        fprintf (stderr, "ERROR::SHADER::FRAGMENT::COMPILATION_FAILED %s\n", infoLog);
-//        return EXIT_FAILURE;
-//    }
-//
-//    GLuint shaderProgram;
-//    shaderProgram = glCreateProgram();
-//    glAttachShader(shaderProgram, vertexShader);
-//    glAttachShader(shaderProgram, fragmentShader);
-//    glLinkProgram(shaderProgram);
-//    glGetProgramiv(shaderProgram, GL_LINK_STATUS, &success);
-//    if(!success) {
-//        glGetProgramInfoLog(shaderProgram, 512, NULL, infoLog);
-//        fprintf (stderr, "ERROR::SHADER::PROGRAM::COMPILATION_FAILED %s\n", infoLog);
-//        return EXIT_FAILURE;
-//    }
-//    glDeleteShader(vertexShader);
-//    glDeleteShader(fragmentShader);
-    
+
     //=========================================================
     // Init objects
     //=========================================================

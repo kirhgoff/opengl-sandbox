@@ -61,5 +61,17 @@ add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
 target_link_libraries(${PROJECT_NAME} assimp glfw
                       ${GLFW_LIBRARIES} ${GLAD_LIBRARIES}
                       BulletDynamics BulletCollision LinearMath)
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
-    RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME})
+        RUNTIME_OUTPUT_DIRECTORY
+        ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Bin
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG
+        ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Bin
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE
+        ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Bin)
+
+add_custom_target(shader_copy COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PROJECT_SOURCE_DIR}/Glitter/Shaders/
+        ${CMAKE_BINARY_DIR}/Glitter/Shaders/)
+
+add_dependencies(${PROJECT_NAME} shader_copy)

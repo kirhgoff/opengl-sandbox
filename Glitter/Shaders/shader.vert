@@ -8,9 +8,12 @@ out vec3 ourColor;
 
 void main() {
     gl_Position = vec4(
-        position.x * sin(2 * PI * multiplier),
-        position.y * cos(PI * multiplier/3),
-        position.z + position.z * multiplier,
+//        position.x * sin(2 * PI * multiplier),
+//        position.y * cos(PI * multiplier/3),
+//        position.z + position.z * multiplier,
+        position.x,
+        position.y,
+        position.z,
         1.0
     );
     ourColor = color;

@@ -71,11 +71,17 @@ int main(int argc, char * argv[]) {
 
     GLfloat vertices[] = {
             // Positions         // Colors
-            0.0f,   -0.5f,   0.0f,  1.0f, 0.0f, 0.0f,  // Bottom Right
-            -0.5f,  0.5f,  0.0f,  0.0f, 1.0f, 0.0f,  // Bottom Left
-            0.5f,   0.5f,  0.0f,  0.0f, 0.0f, 1.0f   // Top
+            0.5f,   -0.5f,   0.0f,  1.0f, 0.0f, 0.0f,  // Bottom Right
+            -0.5f,  -0.5f,  0.0f,  0.0f, 1.0f, 0.0f,  // Bottom Left
+            0.0f,   0.5f,  0.0f,  0.0f, 0.0f, 1.0f   // Top
     };
-    
+
+    GLfloat texCoords[] = {
+            0.0f, 0.0f, // Lower-left corner
+            1.0f, 0.0f, // Lower-right corner
+            0.5f, 1.0f // Top-center corner
+    };
+
     GLuint VAO, VBO;
     glGenVertexArrays(1, &VAO);
     glGenBuffers(1, &VBO);

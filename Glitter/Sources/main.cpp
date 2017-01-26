@@ -14,7 +14,8 @@ void key_callback(GLFWwindow* window, int key, int scancode, int action, int mod
 
 const GLchar* vertexShaderSource = " \
     #version 330 core \
-    layout (location = 0) in vec3 position; \
+    layout (location = 0) \
+    in vec3 position; \
     void main() { \
         gl_Position = vec4(position.x, position.y, position.z, 1.0); \
     }";
@@ -22,8 +23,9 @@ const GLchar* vertexShaderSource = " \
 const GLchar* fragmentShaderSource = " \
     #version 330 core \
     out vec4 color; \
+    uniform vec4 ourColor;\
     void main() { \
-        color = vec4(1.0f, 0.5f, 0.2f, 1.0f); \
+        color = ourColor; \
     }";
 
 int main(int argc, char * argv[]) {
@@ -49,6 +51,10 @@ int main(int argc, char * argv[]) {
     glfwMakeContextCurrent(window);
     gladLoadGL();
     fprintf(stderr, "OpenGL %s\n", glGetString(GL_VERSION));
+
+    GLint nrAttributes;
+    glGetIntegerv(GL_MAX_VERTEX_ATTRIBS, &nrAttributes);
+    fprintf(stderr, "Maximum nr of vertex attributes supported: %d\n", nrAttributes);
 
     // Define the viewport dimensions
     int width, height;
@@ -128,6 +134,12 @@ int main(int argc, char * argv[]) {
         glClear(GL_COLOR_BUFFER_BIT);
 
         glUseProgram(shaderProgram);
+
+        GLfloat timeValue = glfwGetTime();
+        GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
+        GLint vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
+        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);
         glBindVertexArray(0);

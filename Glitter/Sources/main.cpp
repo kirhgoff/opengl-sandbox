@@ -13,19 +13,22 @@
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
 const GLchar* vertexShaderSource = " \
-    #version 330 core \
-    layout (location = 0) \
-    in vec3 position; \
+    #version 410 core \
+    layout (location = 0) in vec3 position; \
+    layout (location = 1) in vec3 color;\
+    out vec3 ourColor;\
     void main() { \
-        gl_Position = vec4(position.x, position.y, position.z, 1.0); \
+        gl_Position = vec4(position, 1.0);\
+        ourColor = color;\
     }";
 
 const GLchar* fragmentShaderSource = " \
-    #version 330 core \
+    #version 410 core \
+    uniform float multiplier;\
+    in vec3 ourColor;\
     out vec4 color; \
-    uniform vec4 ourColor;\
     void main() { \
-        color = ourColor; \
+        color = vec4(ourColor.x * (1 -  multiplier), ourColor.y * multiplier, ourColor.z, 1.0f); \
     }";
 
 int main(int argc, char * argv[]) {
@@ -33,7 +36,7 @@ int main(int argc, char * argv[]) {
     // Load GLFW and Create a Window
     glfwInit();
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 4);
-    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 1);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
     glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
     glfwWindowHint(GLFW_RESIZABLE, GL_FALSE);
@@ -105,11 +108,12 @@ int main(int argc, char * argv[]) {
     //=========================================================
     // Init objects
     //=========================================================
-    
+
     GLfloat vertices[] = {
-        -0.5f, -0.5f, 0.0f,
-        0.5f, -0.5f, 0.0f,
-        0.0f, 0.5f, 0.0f
+            // Positions         // Colors
+            0.5f, -0.5f, 0.0f,  1.0f, 0.0f, 0.0f,  // Bottom Right
+            -0.5f, -0.5f, 0.0f,  0.0f, 1.0f, 0.0f,  // Bottom Left
+            0.0f,  0.5f, 0.0f,  0.0f, 0.0f, 1.0f   // Top
     };
     
     GLuint VAO, VBO;
@@ -119,11 +123,15 @@ int main(int argc, char * argv[]) {
     glBindVertexArray(VAO);
     glBindBuffer(GL_ARRAY_BUFFER, VBO);
     glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(GLfloat), (GLvoid*)0);
+
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)0);
     glEnableVertexAttribArray(0);
+
+    glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 6 * sizeof(GLfloat), (GLvoid*)(3 * sizeof(GLfloat)));
+    glEnableVertexAttribArray(1);
+
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glBindVertexArray(0);
 
     // Rendering Loop
     while (!glfwWindowShouldClose(window)) {
@@ -136,9 +144,9 @@ int main(int argc, char * argv[]) {
         glUseProgram(shaderProgram);
 
         GLfloat timeValue = glfwGetTime();
-        GLfloat greenValue = (sin(timeValue) / 2) + 0.5;
-        GLint vertexColorLocation = glGetUniformLocation(shaderProgram, "ourColor");
-        glUniform4f(vertexColorLocation, 0.0f, greenValue, 0.0f, 1.0f);
+        GLfloat multiplierValue = (sin(timeValue) / 2) + 0.5;
+        GLint multiplierLocation = glGetUniformLocation(shaderProgram, "multiplier");
+        glUniform1f(multiplierLocation, multiplierValue);
 
         glBindVertexArray(VAO);
         glDrawArrays(GL_TRIANGLES, 0, 3);

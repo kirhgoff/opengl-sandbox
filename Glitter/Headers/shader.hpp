@@ -18,6 +18,9 @@ public:
     Shader(const GLchar* vertexSourcePath, const GLchar* fragmentSourcePath);
     void Use();
 
+private:
+    GLchar *readShaderFile(const GLchar *path) const;
+    GLuint compileShader(int shaderType, const GLchar *&code) const;
 };
 
 

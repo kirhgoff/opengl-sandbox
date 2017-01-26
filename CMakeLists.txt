@@ -18,6 +18,8 @@ option(BUILD_OPENGL3_DEMOS OFF)
 option(BUILD_UNIT_TESTS OFF)
 add_subdirectory(Glitter/Vendor/bullet)
 
+add_subdirectory(Glitter/Vendor/soil)
+
 if(MSVC)
     set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} /W4")
 else()
@@ -33,9 +35,11 @@ include_directories(Glitter/Headers/
                     Glitter/Vendor/glad/include/
                     Glitter/Vendor/glfw/include/
                     Glitter/Vendor/glm/
-                    Glitter/Vendor/stb/)
+                    Glitter/Vendor/stb/
+                    Glitter/Vendor/soil/inc/)
 
-file(GLOB VENDORS_SOURCES Glitter/Vendor/glad/src/glad.c)
+file(GLOB VENDORS_SOURCES Glitter/Vendor/glad/src/glad.c
+                          Glitter/Vendor/soil/src/ *.c)
 file(GLOB PROJECT_HEADERS Glitter/Headers/*.hpp)
 file(GLOB PROJECT_SOURCES Glitter/Sources/*.cpp)
 file(GLOB PROJECT_SHADERS Glitter/Shaders/*.comp
@@ -58,7 +62,7 @@ add_definitions(-DGLFW_INCLUDE_NONE
 add_executable(${PROJECT_NAME} ${PROJECT_SOURCES} ${PROJECT_HEADERS}
                                ${PROJECT_SHADERS} ${PROJECT_CONFIGS}
                                ${VENDORS_SOURCES})
-target_link_libraries(${PROJECT_NAME} assimp glfw
+target_link_libraries(${PROJECT_NAME} assimp glfw soil
                       ${GLFW_LIBRARIES} ${GLAD_LIBRARIES}
                       BulletDynamics BulletCollision LinearMath)
 
@@ -74,4 +78,9 @@ add_custom_target(shader_copy COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${PROJECT_SOURCE_DIR}/Glitter/Shaders/
         ${CMAKE_BINARY_DIR}/Glitter/Shaders/)
 
+add_custom_target(textures_copy COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PROJECT_SOURCE_DIR}/Glitter/Textures/
+        ${CMAKE_BINARY_DIR}/Glitter/Textures/)
+
 add_dependencies(${PROJECT_NAME} shader_copy)
+add_dependencies(${PROJECT_NAME} textures_copy)

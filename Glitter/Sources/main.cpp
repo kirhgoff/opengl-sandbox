@@ -5,6 +5,7 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include <SOIL/SOIL.h>
 
 // Standard Headers
 #include <cstdio>
@@ -12,25 +13,6 @@
 #include <shader.hpp>
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
-
-const GLchar* vertexShaderSource = " \
-    #version 410 core \
-    layout (location = 0) in vec3 position; \
-    layout (location = 1) in vec3 color;\
-    out vec3 ourColor;\
-    void main() { \
-        gl_Position = vec4(position, 1.0);\
-        ourColor = color;\
-    }";
-
-const GLchar* fragmentShaderSource = " \
-    #version 410 core \
-    uniform float multiplier;\
-    in vec3 ourColor;\
-    out vec4 color; \
-    void main() { \
-        color = vec4(ourColor.x * (1 -  multiplier), ourColor.y * multiplier, ourColor.z, 1.0f); \
-    }";
 
 int main(int argc, char * argv[]) {
     
@@ -100,9 +82,12 @@ int main(int argc, char * argv[]) {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
     Shader ourShader(
-        "/Users/klastovirya/Projects/Glitter/Glitter/Shaders/shader.vert",
-        "/Users/klastovirya/Projects/Glitter/Glitter/Shaders/shader.frag"
+        "../Shaders/shader.vert",
+        "../Shaders/shader.frag"
     );
+
+    unsigned char* image = SOIL_load_image("../Textures/container.jpg", &width, &height, 0,
+                                           SOIL_LOAD_RGB);
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();

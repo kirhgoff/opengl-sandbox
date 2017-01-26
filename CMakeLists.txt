@@ -35,7 +35,8 @@ include_directories(Glitter/Headers/
                     Glitter/Vendor/glm/
                     Glitter/Vendor/stb/)
 
-file(GLOB VENDORS_SOURCES Glitter/Vendor/glad/src/glad.c)
+file(GLOB VENDORS_SOURCES Glitter/Vendor/glad/src/glad.c
+                          Glitter/Vendor/stb/*.c)
 file(GLOB PROJECT_HEADERS Glitter/Headers/*.hpp)
 file(GLOB PROJECT_SOURCES Glitter/Sources/*.cpp)
 file(GLOB PROJECT_SHADERS Glitter/Shaders/*.comp
@@ -74,4 +75,9 @@ add_custom_target(shader_copy COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${PROJECT_SOURCE_DIR}/Glitter/Shaders/
         ${CMAKE_BINARY_DIR}/Glitter/Shaders/)
 
+add_custom_target(textures_copy COMMAND ${CMAKE_COMMAND} -E copy_directory
+        ${PROJECT_SOURCE_DIR}/Glitter/Textures/
+        ${CMAKE_BINARY_DIR}/Glitter/Textures/)
+
 add_dependencies(${PROJECT_NAME} shader_copy)
+add_dependencies(${PROJECT_NAME} textures_copy)

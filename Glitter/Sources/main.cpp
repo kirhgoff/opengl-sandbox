@@ -5,6 +5,9 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+#include "stb_image.h"
+#include <glm/glm.hpp>
+
 
 // Standard Headers
 #include <cstdio>
@@ -13,24 +16,7 @@
 
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode);
 
-const GLchar* vertexShaderSource = " \
-    #version 410 core \
-    layout (location = 0) in vec3 position; \
-    layout (location = 1) in vec3 color;\
-    out vec3 ourColor;\
-    void main() { \
-        gl_Position = vec4(position, 1.0);\
-        ourColor = color;\
-    }";
-
-const GLchar* fragmentShaderSource = " \
-    #version 410 core \
-    uniform float multiplier;\
-    in vec3 ourColor;\
-    out vec4 color; \
-    void main() { \
-        color = vec4(ourColor.x * (1 -  multiplier), ourColor.y * multiplier, ourColor.z, 1.0f); \
-    }";
+void loadTexture(std::string const & filename);
 
 int main(int argc, char * argv[]) {
     
@@ -66,6 +52,10 @@ int main(int argc, char * argv[]) {
     glViewport(0, 0, width, height);
 
     //=========================================================
+    // Texture loading
+    //=========================================================
+    loadTexture("../Textures/container.jpg");
+    //=========================================================
     // Init objects
     //=========================================================
 
@@ -99,10 +89,7 @@ int main(int argc, char * argv[]) {
     glBindVertexArray(0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-    Shader ourShader(
-        "/Users/klastovirya/Projects/Glitter/Glitter/Shaders/shader.vert",
-        "/Users/klastovirya/Projects/Glitter/Glitter/Shaders/shader.frag"
-    );
+    Shader ourShader("../Shaders/shader.vert", "../Shaders/shader.frag");
 
     while (!glfwWindowShouldClose(window)) {
         glfwPollEvents();
@@ -131,8 +118,19 @@ int main(int argc, char * argv[]) {
     return EXIT_SUCCESS;
 }
 
+void loadTexture(std::string const & filename) {
+    int width, height, channels;
+    unsigned char * image = stbi_load(filename.c_str(), &width, &height, &channels, 0);
+    if (!image) {
+        fprintf(stderr, "%s %s\n", "Failed to Load Texture", filename.c_str());
+    }
+
+    stbi_image_free(image);
+}
+
 // Is called whenever a key is pressed/released via GLFW
 void key_callback(GLFWwindow* window, int key, int scancode, int action, int mode){
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
         glfwSetWindowShouldClose(window, GL_TRUE);
 }
+

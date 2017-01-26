@@ -12,11 +12,8 @@
 
 Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath) {
 
-    const GLchar *vertexShaderCode = readShaderFile(vertexPath);
-    const GLchar *fragmentShaderCode = readShaderFile(fragmentPath);
-
-    GLuint vertexShader = compileShader(GL_VERTEX_SHADER, vertexShaderCode);
-    GLuint fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentShaderCode);
+    GLuint vertexShader = compileShader(GL_VERTEX_SHADER, vertexPath);
+    GLuint fragmentShader = compileShader(GL_FRAGMENT_SHADER, fragmentPath);
 
     this->Program = glCreateProgram();
     glAttachShader(this->Program, vertexShader);
@@ -35,7 +32,15 @@ Shader::Shader(const GLchar* vertexPath, const GLchar* fragmentPath) {
     glDeleteShader(fragmentShader);
 }
 
-GLuint Shader::compileShader(int shaderType, const GLchar *&code) const {
+GLuint Shader::compileShader(int shaderType, const GLchar * path) const {
+    fprintf(stdout, "path: %s\n", path);
+
+    std::ifstream fd(path);
+    auto src = std::string(std::istreambuf_iterator<char>(fd),
+                           (std::istreambuf_iterator<char>()));
+
+    const GLchar * code = (GLchar *) src.c_str();
+
     GLint success;
     GLchar infoLog[512];
 
@@ -45,27 +50,34 @@ GLuint Shader::compileShader(int shaderType, const GLchar *&code) const {
     glGetShaderiv(shader, GL_COMPILE_STATUS, &success);
     if (!success) {
         glGetShaderInfoLog(shader, 512, NULL, infoLog);
-        fprintf(stderr, "ERROR::SHADER::VERTEX::COMPILATION_FAILED %s\n", infoLog);
+        fprintf(stderr, "ERROR::SHADER::VERTEX::COMPILATION_FAILED %s %d\n", infoLog, shaderType);
     };
     return shader;
 }
 
 GLchar *Shader::readShaderFile(const GLchar *path) const {
-    std::string code;
-    std::ifstream file;
-    file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+//    std::string code;
+//    std::ifstream file;
+//    file.exceptions(std::ifstream::failbit | std::ifstream::badbit);
+//
+//    try {
+//        file.open(path);
+//        stringstream vShaderStream;
+//        vShaderStream << file.rdbuf();
+//        file.close();
+//        code = vShaderStream.str();
+//    } catch (ios_base::failure e) {
+//        fprintf(stderr, "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: %s", path);
+//    }
+//
+//    return (GLchar *)code.c_str();
+    fprintf(stdout, "path: %s\n", path);
+    std::ifstream fd(path);
+    auto src = std::string(std::istreambuf_iterator<char>(fd),
+                           (std::istreambuf_iterator<char>()));
 
-    try {
-        file.open(path);
-        stringstream vShaderStream;
-        vShaderStream << file.rdbuf();
-        file.close();
-        code = vShaderStream.str();
-    } catch (ios_base::failure e) {
-        fprintf(stderr, "ERROR::SHADER::FILE_NOT_SUCCESFULLY_READ: %s", path);
-    }
-
-    return (GLchar *)code.c_str();
+    // Create a Shader Object
+    return (GLchar *) src.c_str();
 }
 
 void Shader::Use() { glUseProgram(this->Program); }

@@ -36,7 +36,7 @@ include_directories(Glitter/Headers/
                     Glitter/Vendor/stb/)
 
 file(GLOB VENDORS_SOURCES Glitter/Vendor/glad/src/glad.c
-                          Glitter/Vendor/stb/*.c)
+                          Glitter/Vendor/stb/*.h)
 file(GLOB PROJECT_HEADERS Glitter/Headers/*.hpp)
 file(GLOB PROJECT_SOURCES Glitter/Sources/*.cpp)
 file(GLOB PROJECT_SHADERS Glitter/Shaders/*.comp
@@ -63,13 +63,13 @@ target_link_libraries(${PROJECT_NAME} assimp glfw
                       ${GLFW_LIBRARIES} ${GLAD_LIBRARIES}
                       BulletDynamics BulletCollision LinearMath)
 
+set(CMAKE_BINARY_DIR ${PROJECT_SOURCE_DIR}/Build)
+set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR})
+
 set_target_properties(${PROJECT_NAME} PROPERTIES
-        RUNTIME_OUTPUT_DIRECTORY
-        ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Bin
-        RUNTIME_OUTPUT_DIRECTORY_DEBUG
-        ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Bin
-        RUNTIME_OUTPUT_DIRECTORY_RELEASE
-        ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Bin)
+        RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Bin
+        RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Bin
+        RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/${PROJECT_NAME}/Bin)
 
 add_custom_target(shader_copy COMMAND ${CMAKE_COMMAND} -E copy_directory
         ${PROJECT_SOURCE_DIR}/Glitter/Shaders/

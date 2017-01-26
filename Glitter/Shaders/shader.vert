@@ -1,7 +1,7 @@
 #version 410 core
-#define PI 3.1415926
+//#define PI 3.1415926
 
-uniform float multiplier;
+//uniform float multiplier;
 layout (location = 0) in vec3 position;
 layout (location = 1) in vec3 color;
 out vec3 ourColor;

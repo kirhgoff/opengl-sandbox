@@ -5,9 +5,10 @@
 
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
-#include "stb_image.h"
 #include <glm/glm.hpp>
 
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb_image.h"
 
 // Standard Headers
 #include <cstdio>
@@ -124,6 +125,13 @@ void loadTexture(std::string const & filename) {
     if (!image) {
         fprintf(stderr, "%s %s\n", "Failed to Load Texture", filename.c_str());
     }
+
+    GLuint texture;
+    glGenTextures(1, &texture);
+    glBindTexture(GL_TEXTURE_2D, texture);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+    glGenerateMipmap(GL_TEXTURE_2D);
+    glBindTexture(GL_TEXTURE_2D, 0);
 
     stbi_image_free(image);
 }

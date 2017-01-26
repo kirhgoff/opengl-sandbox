@@ -20,7 +20,7 @@ public:
 
 private:
     GLchar *readShaderFile(const GLchar *path) const;
-    GLuint compileShader(int shaderType, const GLchar *&code) const;
+    GLuint compileShader(int shaderType, const GLchar * code) const;
 };
 
 
